@@ -16,14 +16,19 @@ const handleEmailChange = ((e) => {
 });
 
 const handlePasswordChange = ((e) => {
+  if (!validationStates.passwordState) {
+    validatePassword();
+  }
   setFormValues({...formValues, password: e.target.value})
 });
 
 const validatePassword = () => {
   if (formValues.password < 9 || !/[a-zA-Z]/.test(formValues.password) || !/\d/.test(formValues.password)) {
     setValidationStates({...validationStates, passwordState: false});
+    return false;
   } else {
     setValidationStates({...validationStates, passwordState: true});
+    return true;
   }
 }
 
@@ -34,10 +39,15 @@ const handleSelectChange = ((e) => {
 const validateEmail = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   setValidationStates({...validationStates, emailState: emailRegex.test(formValues.email)});
+  return emailRegex.test(formValues.email);
 }
 
 const clickSubmit = (() => {
-  alert(JSON.stringify(formValues));
+  const emailValid = validateEmail();
+  const passwordValid = validatePassword();
+  if (emailValid && passwordValid) {
+    alert(JSON.stringify(formValues));
+  }
 })
 
 
